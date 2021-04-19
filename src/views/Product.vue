@@ -11,14 +11,29 @@
 
 <script>
 import ProductCard from '@/components/ProductCard.vue'
-import { PRODUCTS_QUERY } from '../graphql.js'
+
+import { PRODUCT_QUERY } from '../graphql.js'
+
 export default {
-  name: 'Home',
+  name: 'Product',
+  props: ['id'],
   components: {
     ProductCard,
   },
+  data() {
+    return {
+      uid: this.$route.params.id,
+    }
+  },
   apollo: {
-    allProducts: PRODUCTS_QUERY,
+    allProducts: {
+      query: PRODUCT_QUERY,
+      variables() {
+        return {
+          id: this.uid,
+        }
+      },
+    },
   },
 }
 </script>
