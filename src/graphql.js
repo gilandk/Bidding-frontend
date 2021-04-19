@@ -50,3 +50,26 @@ export const PRODUCT_QUERY = gql`
     }
   }
 `
+export const ADD_PRODUCT_MUTATION = gql`
+  mutation(
+    $name: String!
+    $description: String!
+    $lowestBid: Int!
+    $startingBid: Int!
+    $expireBid: ISO8601Date!
+  ) {
+    createProduct(
+      name: $name
+      description: $description
+      lowestBid: $lowestBid
+      startingBid: $startingBid
+      expireBid: $expireBid
+    ) {
+      name
+      description
+      lowestBid
+      startingBid
+      expireBid
+    }
+  }
+`

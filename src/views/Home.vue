@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <router-link :to="{ name: 'product-add' }">Add Product</router-link>
     <ProductCard
       class="card mb-2"
       v-for="product in allProducts"
@@ -12,13 +13,22 @@
 <script>
 import ProductCard from '@/components/ProductCard.vue'
 import { PRODUCTS_QUERY } from '../graphql.js'
+
 export default {
   name: 'Home',
   components: {
     ProductCard,
   },
+  data() {
+    return {
+      // 3
+      allProducts: [],
+    }
+  },
   apollo: {
-    allProducts: PRODUCTS_QUERY,
+    allProducts: {
+      query: PRODUCTS_QUERY,
+    },
   },
 }
 </script>

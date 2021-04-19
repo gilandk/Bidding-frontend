@@ -48,9 +48,7 @@
         </b-form-group>
 
         <b-form-group id="fieldset-horizontal" label-for="input-horizontal">
-          <b-button type="submit" name="signin" variant="primary"
-            >Sign-up</b-button
-          >
+          <b-button type="submit" variant="primary">Sign-up</b-button>
         </b-form-group>
         <router-link to="/signin">Already have an account?</router-link>
       </b-card>
