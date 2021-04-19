@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import { SIGNIN_MUTATION } from '../graphql.js'
 import { onLogin } from '../vue-apollo.js'
 
 export default {
@@ -61,13 +61,7 @@ export default {
       this.$apollo
         .mutate({
           // Query
-          mutation: gql`
-            mutation($data: AUTH_PROVIDER_CREDENTIALS!) {
-              signIn(credentials: $data) {
-                token
-              }
-            }
-          `,
+          mutation: SIGNIN_MUTATION,
           // Parameters
           variables: {
             data: {
