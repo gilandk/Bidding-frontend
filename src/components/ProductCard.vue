@@ -9,14 +9,45 @@
         {{ product.description }}
       </p>
       <p class="card-text">
-        <strong> Bid Available: </strong> {{ product.lowestBid }} |
+        <strong>Lowest Bid Available: </strong> {{ product.lowestBid }} |
         <strong>Starting Available:</strong> {{ product.startingBid }} |
         <strong>Bid Date:</strong>
-        {{ product.expireBid }}
+        {{ product.expireBid }} | <strong>Bidders: </strong>
+        {{ product.bids ? product.bids.length : 0 }}
       </p>
-      <a href="#" class="btn btn-primary"
-        ><b-icon icon="arrow-left-circle-fill"></b-icon> Send Bid</a
-      >
+      <div v-if="product.stopBid > 0">
+        Bidding Ended
+        <p
+          class="card-text"
+          v-for="bidder in product.bids"
+          :key="bidder.id"
+          :bidder="bidder"
+        >
+          <span v-if="bidder.status == true"> Bidding Winner |</span>
+          <span v-else> </span>
+          <span v-if="bidder.status == true">
+            Name: {{ bidder.user.fullName }} |</span
+          >
+          <span v-else> </span>
+          <span v-if="bidder.status == true">
+            Amount: {{ bidder.bidAmount }}</span
+          >
+          <span v-else> </span>
+        </p>
+      </div>
+      <div v-else>
+        Bidding Ongoing
+        <p class="card-text">
+          <span
+            >Name:
+            {{ product.bids[0] ? product.bids[0].user.fullName : 'None' }} |
+          </span>
+          <span
+            >Lowest Bid Amount:
+            {{ product.bids[0] ? product.bids[0].bidAmount : 'None' }}</span
+          >
+        </p>
+      </div>
     </div>
   </router-link>
 </template>
@@ -36,7 +67,7 @@ export default {
   transition: all 0.2s linear;
   cursor: pointer;
 }
-.produc-card:hover {
+.product-card:hover {
   transform: scale(1.01);
   box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.19);
 }

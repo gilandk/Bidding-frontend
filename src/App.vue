@@ -3,6 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
+      <router-link to="/users">Users</router-link> |
+      <router-link to="/user">User</router-link> |
       <router-link to="/signup">Sign-up</router-link> |
       <router-link to="/signin">Sign-in</router-link> |
       <a href="#" @click.prevent="logout">Sign-out</a>
@@ -17,6 +19,10 @@ import { onLogout } from './vue-apollo.js'
 export default {
   methods: {
     logout() {
+      delete localStorage.admin
+      delete localStorage.fullName
+      delete localStorage.id
+      delete localStorage.signedIn
       onLogout(this.$apollo.provider.defaultClient)
       this.$router.push('/')
     },

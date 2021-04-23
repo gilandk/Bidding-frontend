@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-5">
     <form class="form-signup" @submit.prevent="signup">
       <b-card title="Online Bidding System" sub-title="Sign-up">
         <b-form-group
@@ -42,8 +42,24 @@
           label-for="input-horizontal"
         >
           <b-form-input
+            type="password"
             v-model="password"
-            placeholder="Password"
+            placeholder="**********"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          id="fieldset-horizontal"
+          label-cols-sm="4"
+          label-cols-lg="3"
+          content-cols-sm
+          content-cols-lg="7"
+          label="Password Confirmation"
+          label-for="input-horizontal"
+        >
+          <b-form-input
+            type="password"
+            v-model="password_confirmation"
+            placeholder="**********"
           ></b-form-input>
         </b-form-group>
 
@@ -66,6 +82,7 @@ export default {
       fullName: '',
       email: '',
       password: '',
+      password_confirmation: '',
     }
   },
   methods: {
@@ -79,19 +96,50 @@ export default {
             fullName: this.fullName,
             email: this.email,
             password: this.password,
+            passwordConfirmation: this.password_confirmation,
           },
         })
         .then((data) => {
-          // Result
-          console.log(data)
-          onLogin(this.$apollo.provider.defaultClient, data.data.signIn.token)
-          this.$router.push('/')
+          this.signinSuccess(data)
         })
         .catch((error) => {
-          // Error
-          console.error(error)
-          // We restore the initial user input
+          this.signinFailed(error)
         })
+    },
+    signinSuccess(data) {
+      if (!data.data.signIn.token) {
+        this.signinFailed(response)
+        return
+      }
+      localStorage.setItem(
+        'fullName',
+        JSON.stringify(data.data.signIn.user.fullName).slice(1, -1)
+      )
+      localStorage.setItem(
+        'id',
+        JSON.stringify(data.data.signIn.user.id).slice(1, -1)
+      )
+      localStorage.setItem('admin', JSON.stringify(data.data.signIn.user.admin))
+      localStorage.signedIn = true
+      onLogin(this.$apollo.provider.defaultClient, data.data.signIn.token)
+
+      this.$router.push('/')
+    },
+    signinFailed(error) {
+      this.error =
+        (error.response && error.response.data && error.response.data.error) ||
+        ''
+      delete localStorage.admin
+      delete localStorage.fullName
+      delete localStorage.id
+      delete localStorage.signedIn
+    },
+    checkSignedIn() {
+      if (localStorage.signedIn) {
+        this.$router.push({
+          name: 'signin',
+        })
+      }
     },
   },
 }

@@ -1,6 +1,12 @@
 <template>
-  <div class="container">
-    <router-link :to="{ name: 'product-add' }">Add Product</router-link>
+  <div class="container mb-5">
+    <div class="row ml-2 mb-2">
+      <div class="mt-2 mb-2s float-left">
+        <router-link class="btn btn-success" :to="{ name: 'product-add' }"
+          >Add Product</router-link
+        >
+      </div>
+    </div>
     <ProductCard
       class="card mb-2"
       v-for="product in allProducts"

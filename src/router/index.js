@@ -5,8 +5,10 @@ import About from '../views/About.vue'
 import Signin from '../views/Signin.vue'
 import Signup from '../views/Signup.vue'
 import User from '../views/User.vue'
+import Users from '../views/Users.vue'
 import Product from '../views/Product.vue'
 import ProductAdd from '../views/ProductAdd.vue'
+import ProductUpdate from '../views/ProductUpdate.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +39,11 @@ const routes = [
     component: User,
   },
   {
+    path: '/users',
+    name: 'users',
+    component: Users,
+  },
+  {
     path: '/product/:id',
     name: 'product',
     component: Product,
@@ -46,6 +53,11 @@ const routes = [
     path: '/products/add',
     name: 'product-add',
     component: ProductAdd,
+  },
+  {
+    path: '/products/:id/update',
+    name: 'product-update',
+    component: ProductUpdate,
   },
 ]
 

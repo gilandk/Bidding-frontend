@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-5">
     <form class="form-signin" method="POST" @submit.prevent="signin">
       <b-card title="Online Bidding System" sub-title="Sign-in">
         <b-form-group
@@ -28,6 +28,7 @@
           label-for="input-horizontal"
         >
           <b-form-input
+            type="password"
             v-model="password"
             name="password"
             placeholder="Password"
@@ -71,16 +72,47 @@ export default {
           },
         })
         .then((data) => {
-          // Result
-          console.log(data)
-          onLogin(this.$apollo.provider.defaultClient, data.data.signIn.token)
-          this.$router.push('/')
+          this.signinSuccess(data)
         })
         .catch((error) => {
-          // Error
-          console.error(error)
-          // We restore the initial user input
+          this.signinFailed(error)
         })
+    },
+    signinSuccess(data) {
+      if (!data.data.signIn.token) {
+        this.signinFailed(response)
+        return
+      }
+      localStorage.setItem(
+        'fullName',
+        JSON.stringify(data.data.signIn.user.fullName).slice(1, -1)
+      )
+      localStorage.setItem(
+        'id',
+        JSON.stringify(data.data.signIn.user.id).slice(1, -1)
+      )
+      localStorage.setItem('admin', JSON.stringify(data.data.signIn.user.admin))
+      localStorage.signedIn = true
+      onLogin(this.$apollo.provider.defaultClient, data.data.signIn.token)
+
+      this.$router.push('/')
+    },
+    signinFailed(error) {
+      this.error =
+        (error.response && error.response.data && error.response.data.error) ||
+        ''
+      delete localStorage.admin
+      delete localStorage.fullName
+      delete localStorage.id
+      delete localStorage.csrf
+      delete localStorage.signedIn
+    },
+    checkSignedIn() {
+      if (localStorage.signedIn) {
+        this.$router.push({
+          name: 'signin',
+        })
+      }
     },
   },
 }
