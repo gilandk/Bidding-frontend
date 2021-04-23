@@ -239,3 +239,31 @@ export const UPDATE_PRODUCT_MUTATION = gql`
     }
   }
 `
+
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation($userId: ID!, $password: String!, $passwordConfirmation: String!) {
+    updatePassword(
+      userId: $userId
+      authProvider: {
+        credentials: {
+          password: $password
+          passwordConfirmation: $passwordConfirmation
+        }
+      }
+    ) {
+      id
+      fullName
+      email
+    }
+  }
+`
+export const UPDATE_ACCOUNT_MUTATION = gql`
+  mutation($userId: ID!, $fullName: String!, $email: String!) {
+    updateUser(userId: $userId, fullName: $fullName, email: $email) {
+      id
+      fullName
+      email
+      admin
+    }
+  }
+`

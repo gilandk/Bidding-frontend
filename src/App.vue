@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/users">Users</router-link> |
-      <router-link to="/user">User</router-link> |
-      <router-link to="/signup">Sign-up</router-link> |
-      <router-link to="/signin">Sign-in</router-link> |
-      <a href="#" @click.prevent="logout">Sign-out</a>
+      <router-link to="/">Products | </router-link>
+      <router-link to="/about">About | </router-link>
+      <router-link v-if="signedInAdmin()" to="/users">Users | </router-link>
+      <router-link to="/user">User | </router-link>
+      <router-link v-if="!signedIn()" to="/signup">Sign-up | </router-link>
+      <router-link v-if="!signedIn()" to="/signin">Sign-in | </router-link>
+      <a href="#" v-if="signedIn()" @click.prevent="logout"> Sign-out</a>
     </div>
     <router-view />
   </div>
@@ -24,7 +24,13 @@ export default {
       delete localStorage.id
       delete localStorage.signedIn
       onLogout(this.$apollo.provider.defaultClient)
-      this.$router.push('/')
+      this.$router.go('/')
+    },
+    signedIn() {
+      return localStorage.signedIn
+    },
+    signedInAdmin() {
+      return localStorage.admin == 'true'
     },
   },
 }

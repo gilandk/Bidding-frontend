@@ -1,5 +1,6 @@
 <template>
   <div class="container mb-5">
+    <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <div class="card mt-2 mb-2">
       <table class="table">
         <thead>
@@ -38,14 +39,19 @@ export default {
   name: 'Users',
   data() {
     return {
-      // 3
-      allUsers: [],
+      error: '',
     }
   },
   apollo: {
     allUsers: {
       query: USERS_QUERY,
     },
+  },
+  created() {
+    this.checkSignedIn()
+  },
+  updated() {
+    this.checkSignedIn()
   },
   methods: {
     deleteUser(id) {
@@ -63,6 +69,11 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+    },
+    checkSignedIn() {
+      if (localStorage.admin == 'false') {
+        this.$router.replace('/')
+      }
     },
   },
 }

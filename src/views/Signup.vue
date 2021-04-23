@@ -1,6 +1,7 @@
 <template>
   <div class="container mb-5">
     <form class="form-signup" @submit.prevent="signup">
+      <div class="alert alert-danger" v-if="error">{{ error }}</div>
       <b-card title="Online Bidding System" sub-title="Sign-up">
         <b-form-group
           id="fieldset-horizontal"
@@ -83,7 +84,14 @@ export default {
       email: '',
       password: '',
       password_confirmation: '',
+      error: '',
     }
+  },
+  created() {
+    this.checkedSignedIn()
+  },
+  updated() {
+    this.checkedSignedIn()
   },
   methods: {
     signup() {
@@ -134,11 +142,9 @@ export default {
       delete localStorage.id
       delete localStorage.signedIn
     },
-    checkSignedIn() {
+    checkedSignedIn() {
       if (localStorage.signedIn) {
-        this.$router.push({
-          name: 'signin',
-        })
+        this.$router.replace('/')
       }
     },
   },

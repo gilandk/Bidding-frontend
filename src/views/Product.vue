@@ -1,5 +1,6 @@
 <template>
   <div class="container mb-5">
+    <div class="alert alert-danger" v-if="error">{{ error }}</div>
     <ProductCard
       class="card mb-2"
       v-for="product in allProducts"
@@ -8,7 +9,7 @@
     >
     </ProductCard>
 
-    <div class="row ml-2 mb-2">
+    <div v-if="signedInAdmin()" class="row ml-2 mb-2">
       <div class="mt-2 mb-2s">
         <b-button variant="warning" class="mr-2" v-on:click="stopBidding()"
           ><b-icon icon="arrow-left-circle-fill"></b-icon> Stop
@@ -41,11 +42,7 @@
             label="Amount:"
             label-for="input-horizontal"
           >
-            <b-form-input
-              type="number"
-              v-bind:min="allProducts.lowestBid"
-              v-model.number="amount"
-            ></b-form-input>
+            <b-form-input type="number" v-model.number="amount"></b-form-input>
           </b-form-group>
           <b-button type="submit" variant="primary"
             ><b-icon icon="arrow-left-circle-fill"></b-icon> Send Bid</b-button
@@ -106,7 +103,7 @@ export default {
       uid: localStorage.getItem('id'),
       pid: this.$route.params.id,
       amount: 0,
-      allProducts: {},
+      error: '',
     }
   },
   apollo: {
@@ -120,6 +117,10 @@ export default {
     },
   },
   methods: {
+    setError(error, text) {
+      this.error =
+        (error.response && error.data.data && error.data.data.error) || text
+    },
     addBid() {
       this.$apollo
         .mutate({
@@ -136,6 +137,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.setError(error, 'Cannot Add Bid')
         })
     },
     bidWinner(id) {
@@ -153,6 +155,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.setError(error, 'Error Selecting Bidding Winner')
         })
     },
     stopBidding() {
@@ -171,7 +174,7 @@ export default {
           console.log(error)
         })
     },
-    deleteProduct(id) {
+    deleteProduct() {
       this.$apollo
         .mutate({
           mutation: DELETE_PRODUCT_MUTATION,
@@ -185,7 +188,14 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.setError(error, 'Cannot Delete Product')
         })
+    },
+    signedIn() {
+      return localStorage.signedIn
+    },
+    signedInAdmin() {
+      return localStorage.admin == 'true'
     },
   },
 }

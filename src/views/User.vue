@@ -19,8 +19,11 @@
                 <span v-if="user.admin == true">Administrator</span>
                 <span v-else>Bidder</span>
               </p>
-              <a href="#" class="card-link">Update Account</a>
-              <a href="#" @click.prevent="logout" class="card-link">Sign-out</a>
+
+              <br />
+              <router-link :to="{ name: 'user-pass' }" class="card-link"
+                >Update Account</router-link
+              >
             </div>
           </div>
         </div>
@@ -58,7 +61,6 @@
 
 <script>
 import { CURRENT_USER_QUERY } from '../graphql.js'
-import { onLogout } from '../vue-apollo.js'
 
 export default {
   name: 'User',
@@ -66,8 +68,8 @@ export default {
   data() {
     return {
       uid: localStorage.getItem('id'),
-      full_name: localStorage.getItem(''),
-      allUsers: [],
+      full_name: localStorage.getItem('fullName'),
+      error: '',
     }
   },
   apollo: {
@@ -78,16 +80,6 @@ export default {
           id: this.uid,
         }
       },
-    },
-  },
-  methods: {
-    logout() {
-      delete localStorage.admin
-      delete localStorage.fullName
-      delete localStorage.id
-      delete localStorage.signedIn
-      onLogout(this.$apollo.provider.defaultClient)
-      this.$router.push('/')
     },
   },
 }

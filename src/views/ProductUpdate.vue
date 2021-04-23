@@ -1,12 +1,14 @@
 <template>
   <div class="container mb-5">
-    <form
-      class="form-signup"
-      @submit.prevent="updateProduct"
-      v-for="product of allProducts"
+    <div class="alert alert-danger" v-if="error">{{ error }}</div>
+    <ProductCard
+      class="card mb-2"
+      v-for="product in allProducts"
       :key="product.id"
       :product="product"
     >
+    </ProductCard>
+    <form class="form-signin" method="POST" @submit.prevent="updateProduct">
       <b-card title="Update Product">
         <b-form-group
           id="fieldset-horizontal"
@@ -17,10 +19,7 @@
           label="Name:"
           label-for="input-horizontal"
         >
-          <b-form-input
-            v-model="product.name"
-            placeholder="Enter Name"
-          ></b-form-input>
+          <b-form-input v-model="name" placeholder="Enter Name"></b-form-input>
         </b-form-group>
 
         <b-form-group
@@ -33,7 +32,7 @@
           label-for="input-horizontal"
         >
           <b-form-textarea
-            v-model="product.description"
+            v-model="description"
             placeholder="Enter Description"
           ></b-form-textarea>
         </b-form-group>
@@ -47,10 +46,7 @@
           label="Lowest Bid Available"
           label-for="input-horizontal"
         >
-          <b-form-input
-            type="number"
-            v-model.number="product.lowestBid"
-          ></b-form-input>
+          <b-form-input type="number" v-model.number="lowestBid"></b-form-input>
         </b-form-group>
 
         <b-form-group
@@ -64,7 +60,7 @@
         >
           <b-form-input
             type="number"
-            v-model.number="product.startingBid"
+            v-model.number="startingBid"
           ></b-form-input>
         </b-form-group>
 
@@ -78,7 +74,7 @@
           label-for="input-horizontal"
         >
           <b-form-datepicker
-            v-model="product.expireBid"
+            v-model="expireBid"
             locale="en-US"
           ></b-form-datepicker>
         </b-form-group>
@@ -92,11 +88,14 @@
 </template>
 
 <script>
+import ProductCard from '@/components/ProductCard.vue'
 import { PRODUCT_QUERY, UPDATE_PRODUCT_MUTATION } from '../graphql.js'
 
 export default {
-  name: 'Product-Update',
   props: ['id'],
+  components: {
+    ProductCard,
+  },
   data() {
     return {
       pid: this.$route.params.id,
@@ -105,6 +104,7 @@ export default {
       lowestBid: 0,
       startingBid: 0,
       expireBid: '',
+      error: '',
     }
   },
   apollo: {
@@ -136,7 +136,10 @@ export default {
         .then((data) => {
           // Result
           console.log(data)
-          this.$router.push('/')
+          this.$router.push({
+            name: 'product',
+            params: { id: this.pid },
+          })
         })
         .catch((error) => {
           // Error

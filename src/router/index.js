@@ -5,6 +5,8 @@ import About from '../views/About.vue'
 import Signin from '../views/Signin.vue'
 import Signup from '../views/Signup.vue'
 import User from '../views/User.vue'
+import UserPass from '../views/UserPass.vue'
+
 import Users from '../views/Users.vue'
 import Product from '../views/Product.vue'
 import ProductAdd from '../views/ProductAdd.vue'
@@ -37,6 +39,12 @@ const routes = [
     path: '/user',
     name: 'user',
     component: User,
+  },
+
+  {
+    path: '/user/password',
+    name: 'user-pass',
+    component: UserPass,
   },
   {
     path: '/users',

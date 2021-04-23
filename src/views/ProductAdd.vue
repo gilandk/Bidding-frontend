@@ -1,6 +1,7 @@
 <template>
   <div class="container mb-5">
     <form class="form-signup" @submit.prevent="addProduct">
+      <div class="alert alert-danger" v-if="error">{{ error }}</div>
       <b-card title="Add Products">
         <b-form-group
           id="fieldset-horizontal"
@@ -92,9 +93,20 @@ export default {
       lowestBid: 0,
       startingBid: 0,
       expireBid: '',
+      error: '',
     }
   },
+  created() {
+    this.checkSignedIn()
+  },
+  updated() {
+    this.checkSignedIn()
+  },
   methods: {
+    setError(error, text) {
+      this.error =
+        (error.response && error.data.data && error.data.data.error) || text
+    },
     addProduct() {
       this.$apollo
         .mutate({
@@ -112,13 +124,20 @@ export default {
         .then((data) => {
           // Result
           console.log(data)
+
           this.$router.push('/')
         })
         .catch((error) => {
           // Error
           console.error(error)
+          this.setError(error, 'Cannot Add Product')
           // We restore the initial user input
         })
+    },
+    checkSignedIn() {
+      if (localStorage.admin == 'false') {
+        this.$router.replace('/')
+      }
     },
   },
 }
